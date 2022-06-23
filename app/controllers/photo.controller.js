@@ -3,7 +3,7 @@ const Galleries = db.galleries
 const path = require('path');
 const sharp = require("sharp");
 const exiftool = require("exiftool-vendored").exiftool;
-const watermark = require('jimp-watermark');
+// const watermark = require('jimp-watermark');
 
 
 exports.getAll = async (req, res) => {
@@ -44,17 +44,17 @@ exports.create = async (req, res) => {
                         path.join(__dirname, `../../public/uploads/thumbnail/${files[i].filename}`)
                     )
 
-                var options = {
-                    'ratio': 0.6,// Should be less than one
-                    'opacity': 0.6, //Should be less than one
-                    'dstPath': path.join(__dirname, `../../public/uploads/watermark/${files[i].filename}`)
-                };
+                // var options = {
+                //     'ratio': 0.6,// Should be less than one
+                //     'opacity': 0.6, //Should be less than one
+                //     'dstPath': path.join(__dirname, `../../public/uploads/watermark/${files[i].filename}`)
+                // };
 
-                await watermark.addWatermark(path.join(__dirname, `../../public/uploads/thumbnail/${files[i].filename}`), path.join(__dirname, '../../public/uploads/images/text.png'), options)
-                    .then(data => {
-                    }).catch(err => {
-                        console.log(`failer ${files[i].filename} ${err}`);
-                    });
+                // await watermark.addWatermark(path.join(__dirname, `../../public/uploads/thumbnail/${files[i].filename}`), path.join(__dirname, '../../public/uploads/images/text.png'), options)
+                //     .then(data => {
+                //     }).catch(err => {
+                //         console.log(`failer ${files[i].filename} ${err}`);
+                //     });
             } catch (error) {
                 console.log(error)
             }

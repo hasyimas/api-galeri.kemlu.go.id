@@ -8,7 +8,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const methodOverride = require('method-override');
 
-
 // const client = require("./app/config/ldap.config")
 
 // client.on('connect', (err) => {
