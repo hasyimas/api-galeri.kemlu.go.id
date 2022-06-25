@@ -1,8 +1,7 @@
 const client = require("../config/ldap.config");
 const jwt = require("../config/jwt.config");
+const ldap = require("../config/url.config");
 const axios = require('axios').default;
-
-require('dotenv/config');
 
 exports.login = async (req, res) => {
     try {
@@ -21,7 +20,7 @@ exports.login = async (req, res) => {
         //         });
         //     }
         // });
-        const response = await axios.post(`${process.env.URL_LDAPLOC}/api/login`, {
+        const response = await axios.post(`${ldap}/api/login`, {
             username: username,
             password: password
         });
