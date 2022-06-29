@@ -38,7 +38,7 @@ exports.findAll = async (req, res) => {
         })
 
     } catch (err) {
-        res.status(500).send(err.message)
+        res.status(400).send(err.message)
     }
 
 }
@@ -49,7 +49,7 @@ exports.findById = async (req, res) => {
         let gallery = await Galleries.findById(id).exec();
         res.send({ data: await gallery });
     } catch (err) {
-        res.status(500).send({
+        res.status(400).send({
             message: err.message || "Some error while retrieving galleries"
         });
     }

@@ -6,6 +6,7 @@ const db = {}
 db.mongoose = mongoose
 db.url = dbConfig.mongoURI
 db.galleries = require('./galleries.model')(mongoose)
+db.users = require('./users.model')(mongoose)
 //-------------------------- mongodb
 
 module.exports = db

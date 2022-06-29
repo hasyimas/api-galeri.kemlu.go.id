@@ -9,7 +9,6 @@ exports.getAll = async (req, res) => {
     } catch (error) {
         res.status(400).send(error.message)
     }
-
 }
 
 exports.findById = async (req, res) => {
@@ -18,7 +17,7 @@ exports.findById = async (req, res) => {
         let gallery = await Galleries.findById(id).exec();
         res.send({ data: await gallery });
     } catch (err) {
-        res.status(500).send({
+        res.status(400).send({
             message: err.message || "Some error while retrieving audio"
         });
     }
