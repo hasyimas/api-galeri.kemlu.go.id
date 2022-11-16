@@ -29,7 +29,7 @@ exports.findAll = async (req, res) => {
             filter.fileType = docType
         }
 
-        const galleries = await Galleries.find(filter).skip((curPage - 1) * perPage).limit(perPage)
+        const galleries = await Galleries.find(filter).skip((curPage - 1) * perPage).sort('-year').limit(perPage)
         const totalData = await Galleries.find(filter).limit(300).countDocuments()
         res.send({
             curPage: curPage,
@@ -57,6 +57,6 @@ exports.findById = async (req, res) => {
 
 var filepath = './public/uploads/origin/1288-kemlu-01a.jpg'
 
-exports.find  = async (req, res) =>{
+exports.find = async (req, res) => {
     res.sendFile(filepath);
 }
