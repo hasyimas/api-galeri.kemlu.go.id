@@ -1,6 +1,7 @@
 // Set Storage
 const multer = require('multer')
-var path = require('path');
+const path = require('path');
+const fs = require('fs');
 const storage = multer.diskStorage({
     // destination: function (req, file, cb) {
     //     cb(null, './public/uploads');
@@ -11,10 +12,24 @@ const storage = multer.diskStorage({
         var rpl2 = rpl1.replace(/\s+/gi, '-')
         cb(null, rpl2);
     },
-    destination: (req, file, cb) => {
+    destination: async (req, file, cb) => {
         const { flag } = req.body
         if (flag == "sourceFileBanner") {
+            const pathBannerResolve = path.resolve(path.join(__dirname, "../../public/uploads/banner/"), file.originalname)
+            const pathResolve = path.resolve(path.join(__dirname, "../../public/uploads/banner/resize/"), file.originalname)
+
+            if (fs.existsSync(pathBannerResolve)) {
+                fs.unlinkSync(pathBannerResolve)
+            }
+            if (fs.existsSync(pathResolve)) {
+                fs.unlinkSync(pathResolve)
+            }
+
+
+
             cb(null, path.join(__dirname, "../../public/uploads/banner/"))
+
+
         } else if (flag == "thumbnail") {
             cb(null, path.join(__dirname, "../../public/uploads/thumbnail/"))
         } else if (flag == "watermark") {
@@ -22,8 +37,8 @@ const storage = multer.diskStorage({
         } else {
             cb(null, path.join(__dirname, "../../public/uploads/origin/"))
         }
-    },
-
+    }
 })
+
 const upload = multer({ storage })
 module.exports = upload

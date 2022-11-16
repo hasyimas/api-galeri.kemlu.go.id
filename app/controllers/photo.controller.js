@@ -3,7 +3,7 @@ const Galleries = db.galleries
 const path = require('path');
 const sharp = require("sharp");
 const exiftool = require("exiftool-vendored").exiftool;
-// const watermark = require('jimp-watermark');
+const watermark = require('jimp-watermark');
 
 
 exports.getAll = async (req, res) => {
@@ -15,7 +15,48 @@ exports.getAll = async (req, res) => {
     }
 }
 
+exports.getPaging = async (req, res) => {
+    const page = parseInt(req.query.page) || 0;
+    const limit = parseInt(req.query.limit) || 10;
 
+    const offset = limit * page;
+    let { docType, keyword, year, month } = req.query
+
+    let filter = {}
+    let reqCompile = ''
+
+    if (keyword) {
+        keyword = keyword.split(',')
+        let reg = ''
+        await keyword.forEach(keyword => {
+            reg += keyword + '|'
+        });
+        reqCompile = '(' + reg.substr(0, reg.length - 1) + ')'
+        filter.keywords = new RegExp(reqCompile, 'i')
+    }
+
+    if (year) {
+        var firstDay = Date.parse('' + year + '/' + month + '/1');
+        var lastDay = Date.parse('' + year + '/' + month + '/31');
+        console.log(firstDay);
+        console.log(lastDay);
+        filter.createdAt = { $gte: firstDay, $lte: lastDay }
+    }
+
+    if (docType) {
+        filter.fileType = docType
+    }
+    const totalRows = await Galleries.find(filter).countDocuments()
+    const totalPage = Math.ceil(totalRows / limit);
+    const galleries = await Galleries.find(filter).skip(offset).limit(limit)
+    res.json({
+        result: galleries,
+        page: page,
+        limit: limit,
+        totalRows: totalRows,
+        totalPage: totalPage
+    });
+}
 
 exports.findById = async (req, res) => {
     try {
@@ -44,17 +85,17 @@ exports.create = async (req, res) => {
                         path.join(__dirname, `../../public/uploads/thumbnail/${files[i].filename}`)
                     )
 
-                // var options = {
-                //     'ratio': 0.6,// Should be less than one
-                //     'opacity': 0.6, //Should be less than one
-                //     'dstPath': path.join(__dirname, `../../public/uploads/watermark/${files[i].filename}`)
-                // };
+                var options = {
+                    'ratio': 0.6,// Should be less than one
+                    'opacity': 0.6, //Should be less than one
+                    'dstPath': path.join(__dirname, `../../public/uploads/watermark/${files[i].filename}`)
+                };
 
-                // await watermark.addWatermark(path.join(__dirname, `../../public/uploads/thumbnail/${files[i].filename}`), path.join(__dirname, '../../public/uploads/images/text.png'), options)
-                //     .then(data => {
-                //     }).catch(err => {
-                //         console.log(`failer ${files[i].filename} ${err}`);
-                //     });
+                await watermark.addWatermark(path.join(__dirname, `../../public/uploads/thumbnail/${files[i].filename}`), path.join(__dirname, '../../public/uploads/images/text.png'), options)
+                    .then(data => {
+                    }).catch(err => {
+                        console.log(`failer ${files[i].filename} ${err}`);
+                    });
             } catch (error) {
                 console.log(error)
             }
@@ -217,4 +258,14 @@ exports.createBulk = async (req, res) => {
             message: err.message || "Some error while create galleries"
         })
     }
+}
+
+exports.testingExifData = async (req, res) => {
+    var filex = path.join(__dirname, `../../public/uploads/origin/_J4A4484-EDIT.jpg`)
+    // var filex = path.join(__dirname, `../../public/uploads/origin/006-kemlu-01a-2.jpg`)
+    let exifData = await exiftool.read(await filex)
+
+    res.status(200).send({
+        message: exifData.year
+    })
 }

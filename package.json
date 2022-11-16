@@ -21,6 +21,7 @@
     "express": "4.18.1",
     "http-errors": "2.0.0",
     "https": "^1.0.0",
+    "jimp-watermark": "^1.1.0",
     "jsonwebtoken": "^8.5.1",
     "ldap-authentication": "^2.2.9",
     "ldapjs": "^2.3.3",

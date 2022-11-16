@@ -1,6 +1,7 @@
 const db = require('../models')
 const Galleries = db.galleries
-
+const path = require('path');
+const sharp = require("sharp");
 
 
 exports.getAll = async (req, res) => {
@@ -37,8 +38,18 @@ exports.findById = async (req, res) => {
 exports.updateBanner = async (req, res) => {
     try {
         let id = await req.params.id
+        let { files } = await req;
         let { bannerStat } = await req.body
+
+        const pathBannerResolve = path.resolve(path.join(__dirname, "../../public/uploads/banner/"), files[0].filename)
+        const pathResolve = path.resolve(path.join(__dirname, "../../public/uploads/banner/resize/"), files[0].filename)
+
+
+        await sharp(pathBannerResolve).webp({ quality: 90 }).toFile(pathResolve);
+
+
         const galleries = await Galleries.findById(id);
+
         galleries.bannerStat = bannerStat;
         await galleries.save();
 
@@ -51,4 +62,5 @@ exports.updateBanner = async (req, res) => {
             message: err.message || "Some error while retrieving galleries"
         });
     }
+
 }
