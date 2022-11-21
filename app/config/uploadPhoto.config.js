@@ -25,8 +25,6 @@ const storage = multer.diskStorage({
                 fs.unlinkSync(pathResolve)
             }
 
-
-
             cb(null, path.join(__dirname, "../../public/uploads/banner/"))
 
 
@@ -35,10 +33,29 @@ const storage = multer.diskStorage({
         } else if (flag == "watermark") {
             cb(null, path.join(__dirname, "../../public/uploads/watermark/"))
         } else {
+
+
             cb(null, path.join(__dirname, "../../public/uploads/origin/"))
         }
     }
 })
 
-const upload = multer({ storage })
+//Filter the image type
+const imageFileFilter = (req, file, cb) => {
+    const filePath = path.resolve(path.join(__dirname, "../../public/uploads/origin/"), file.originalname)
+    console.log(filePath);
+
+    fs.exists(filePath, function (exists) {
+        console.log(exists)
+        if (exists) {
+            req.fileValidationError = "Forbidden extension";
+            return cb(null, null, req.fileValidationError);
+        } else {
+            return
+        }
+    });
+    cb(null, true)
+};
+
+const upload = multer({ storage: storage, fileFilter: imageFileFilter })
 module.exports = upload

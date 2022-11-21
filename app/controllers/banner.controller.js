@@ -44,9 +44,7 @@ exports.updateBanner = async (req, res) => {
         const pathBannerResolve = path.resolve(path.join(__dirname, "../../public/uploads/banner/"), files[0].filename)
         const pathResolve = path.resolve(path.join(__dirname, "../../public/uploads/banner/resize/"), files[0].filename)
 
-
-        await sharp(pathBannerResolve).webp({ quality: 90 }).toFile(pathResolve);
-
+        await sharp(pathBannerResolve).jpeg({ quality: 100 }).toFile(pathResolve);
 
         const galleries = await Galleries.findById(id);
 

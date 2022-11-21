@@ -44,6 +44,10 @@ var bannersRouter = require('./app/routes/banners');
 var videosRouter = require('./app/routes/videos');
 var audiosRouter = require('./app/routes/audios');
 
+var logVisitorLogin = require('./app/routes/log-visitor-login');
+var logUsersLogin = require('./app/routes/log-users-login');
+var filesDownload = require('./app/routes/files-download');
+
 // --------------------
 var app = express();
 
@@ -71,6 +75,10 @@ app.use('/api/photo', photosRouter);
 app.use('/api/banner', bannersRouter);
 app.use('/api/video', videosRouter);
 app.use('/api/audio', audiosRouter);
+
+app.use('/api/log-visitor-login', logVisitorLogin);
+app.use('/api/log-users-login', logUsersLogin);
+app.use('/api/files-download', filesDownload);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
