@@ -29,7 +29,7 @@ exports.findAll = async (req, res) => {
             filter.fileType = docType
         }
 
-        const galleries = await Galleries.find(filter).skip((curPage - 1) * perPage).limit(perPage)
+        const galleries = await Galleries.find(filter).skip((curPage - 1) * perPage).sort('-year').limit(perPage)
         const totalData = await Galleries.find(filter).limit(300).countDocuments()
         res.send({
             curPage: curPage,
@@ -38,7 +38,7 @@ exports.findAll = async (req, res) => {
         })
 
     } catch (err) {
-        res.status(500).send(err.message)
+        res.status(400).send(err.message)
     }
 
 }
@@ -49,7 +49,7 @@ exports.findById = async (req, res) => {
         let gallery = await Galleries.findById(id).exec();
         res.send({ data: await gallery });
     } catch (err) {
-        res.status(500).send({
+        res.status(400).send({
             message: err.message || "Some error while retrieving galleries"
         });
     }
@@ -57,6 +57,6 @@ exports.findById = async (req, res) => {
 
 var filepath = './public/uploads/origin/1288-kemlu-01a.jpg'
 
-exports.find  = async (req, res) =>{
+exports.find = async (req, res) => {
     res.sendFile(filepath);
 }

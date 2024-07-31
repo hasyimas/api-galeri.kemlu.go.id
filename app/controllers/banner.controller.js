@@ -1,6 +1,7 @@
 const db = require('../models')
 const Galleries = db.galleries
-
+const path = require('path');
+const sharp = require("sharp");
 
 
 exports.getAll = async (req, res) => {
@@ -17,7 +18,7 @@ exports.getActive = async (req, res) => {
         .then((result) => {
             res.send({ data: result });
         }).catch((err) => {
-            res.status(500).send({
+            res.status(400).send({
                 message: err.message || "Some error while retrieving galleries"
             });
 
@@ -29,7 +30,7 @@ exports.findById = async (req, res) => {
         let gallery = await Galleries.findById(id).exec();
         res.send({ data: await gallery });
     } catch (err) {
-        res.status(500).send({
+        res.status(400).send({
             message: err.message || "Some error while retrieving galleries"
         });
     }
@@ -37,8 +38,16 @@ exports.findById = async (req, res) => {
 exports.updateBanner = async (req, res) => {
     try {
         let id = await req.params.id
+        let { files } = await req;
         let { bannerStat } = await req.body
+
+        const pathBannerResolve = path.resolve(path.join(__dirname, "../../public/uploads/banner/"), files[0].filename)
+        const pathResolve = path.resolve(path.join(__dirname, "../../public/uploads/banner/resize/"), files[0].filename)
+
+        await sharp(pathBannerResolve).jpeg({ quality: 100 }).toFile(pathResolve);
+
         const galleries = await Galleries.findById(id);
+
         galleries.bannerStat = bannerStat;
         await galleries.save();
 
@@ -51,4 +60,5 @@ exports.updateBanner = async (req, res) => {
             message: err.message || "Some error while retrieving galleries"
         });
     }
+
 }

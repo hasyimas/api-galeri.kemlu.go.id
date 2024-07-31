@@ -42,7 +42,7 @@ exports.findAll = async (req, res) => {
         })
 
     } catch (err) {
-        res.status(500).send(err.message)
+        res.status(400).send(err.message)
     }
 
 }
@@ -62,7 +62,7 @@ exports.banner = async (req, res) => {
         .then((result) => {
             res.send({ data: result });
         }).catch((err) => {
-            res.status(500).send({
+            res.status(400).send({
                 message: err.message || "Some error while retrieving galleries"
             });
 
@@ -75,7 +75,7 @@ exports.findById = async (req, res) => {
         let gallery = await Galleries.findById(id).exec();
         res.send({ data: await gallery });
     } catch (err) {
-        res.status(500).send({
+        res.status(400).send({
             message: err.message || "Some error while retrieving galleries"
         });
     }

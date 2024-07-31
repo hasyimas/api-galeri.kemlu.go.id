@@ -18,6 +18,7 @@ module.exports = (mongoose) => {
             fileType: String,
             sourceFile: String,
             bannerStat: { type: Boolean, default: false },
+            detail: Object,
         },
         { timestamps: true }
     )

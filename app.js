@@ -8,7 +8,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const methodOverride = require('method-override');
 
-
 // const client = require("./app/config/ldap.config")
 
 // client.on('connect', (err) => {
@@ -45,6 +44,10 @@ var bannersRouter = require('./app/routes/banners');
 var videosRouter = require('./app/routes/videos');
 var audiosRouter = require('./app/routes/audios');
 
+var logVisitorLogin = require('./app/routes/log-visitor-login');
+var logUsersLogin = require('./app/routes/log-users-login');
+var filesDownload = require('./app/routes/files-download');
+
 // --------------------
 var app = express();
 
@@ -73,6 +76,10 @@ app.use('/api/banner', bannersRouter);
 app.use('/api/video', videosRouter);
 app.use('/api/audio', audiosRouter);
 
+app.use('/api/log-visitor-login', logVisitorLogin);
+app.use('/api/log-users-login', logUsersLogin);
+app.use('/api/files-download', filesDownload);
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
@@ -82,7 +89,7 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  
+
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
